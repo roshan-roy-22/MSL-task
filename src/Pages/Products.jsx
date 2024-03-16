@@ -5,15 +5,16 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import KeyboardDoubleArrowLeftOutlinedIcon from "@mui/icons-material/KeyboardDoubleArrowLeftOutlined";
 import KeyboardDoubleArrowRightOutlinedIcon from "@mui/icons-material/KeyboardDoubleArrowRightOutlined";
 import { useNavigate } from "react-router-dom";
-
+import SyncLoaderr from "../Components/SyncLoader";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
-  
+  const [loading, setLoading] = useState(false);
 
   const fetchProducts = async () => {
+    setLoading(true);
     const res = await fetch(`https://dummyjson.com/products`);
 
     const data = await res.json();
@@ -21,6 +22,7 @@ const Products = () => {
     console.log(data);
 
     if (data && data.products) {
+      setLoading(false);
       setProducts(data.products);
     }
   };
@@ -61,7 +63,9 @@ const Products = () => {
 
                   <div class="px-5 pt-2 flex flex-col">
                     <div className="flex gap-2 items-center">
-                      <h2 class="font-semibold text-lg">${item.discountPercentage} </h2>{" "}
+                      <h2 class="font-semibold text-lg">
+                        ${item.discountPercentage}{" "}
+                      </h2>{" "}
                       <h2 className="line-through">${item.price}</h2>
                     </div>
                     <div className="flex gap-2">
@@ -123,6 +127,7 @@ const Products = () => {
           </div>
         )}
       </div>
+      {loading && <SyncLoaderr />}
     </>
   );
 };
